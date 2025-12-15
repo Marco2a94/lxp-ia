@@ -1,0 +1,45 @@
+timestamp,stationcode,name,nom_arrondissement_communes,numbikesavailable,numdocksavailable,mechanical,ebike,is_installed,is_renting,is_returning
+2025-12-15T14:47:10.137452,48010,Karl Marx,Villejuif,7,9,3,4,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48004,Maxime Gorki - Louis Aragon,Villejuif,9,8,1,8,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48005,Eugène Varlin - Place de la Paix,Villejuif,3,20,1,2,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48008,Guy Môquet - Parvis Georges Marchais,Villejuif,3,26,0,3,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48003,Youri Gagarine - Karl Marx,Villejuif,5,17,4,1,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48009,République - Auguste Perret,Villejuif,10,18,3,7,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48012,Stalingrad - Henri Luisette,Villejuif,5,21,2,3,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48001,Chastenet de Géry - Marcel Paul,Villejuif,0,25,0,0,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48006,Maxime Gorki - Paul Vaillant-Couturier,Villejuif,3,17,0,3,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48002,LCL Campus - Place Oscar Niemeyer,Villejuif,1,35,0,1,OUI,OUI,OUI
+2025-12-15T14:47:10.137452,48011,Epi d'Or - Chevilly,Villejuif,11,9,4,7,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48010,Karl Marx,Villejuif,7,9,3,4,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48004,Maxime Gorki - Louis Aragon,Villejuif,9,8,1,8,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48005,Eugène Varlin - Place de la Paix,Villejuif,3,20,1,2,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48008,Guy Môquet - Parvis Georges Marchais,Villejuif,3,26,0,3,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48003,Youri Gagarine - Karl Marx,Villejuif,5,17,4,1,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48009,République - Auguste Perret,Villejuif,10,18,3,7,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48012,Stalingrad - Henri Luisette,Villejuif,5,21,2,3,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48001,Chastenet de Géry - Marcel Paul,Villejuif,0,25,0,0,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48006,Maxime Gorki - Paul Vaillant-Couturier,Villejuif,3,17,0,3,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48002,LCL Campus - Place Oscar Niemeyer,Villejuif,1,35,0,1,OUI,OUI,OUI
+2025-12-15T14:47:51.477386,48011,Epi d'Or - Chevilly,Villejuif,11,9,4,7,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48010,Karl Marx,Villejuif,7,9,3,4,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48004,Maxime Gorki - Louis Aragon,Villejuif,9,8,1,8,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48005,Eugène Varlin - Place de la Paix,Villejuif,3,20,1,2,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48008,Guy Môquet - Parvis Georges Marchais,Villejuif,3,26,0,3,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48003,Youri Gagarine - Karl Marx,Villejuif,5,17,4,1,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48009,République - Auguste Perret,Villejuif,10,18,3,7,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48012,Stalingrad - Henri Luisette,Villejuif,5,21,2,3,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48001,Chastenet de Géry - Marcel Paul,Villejuif,0,25,0,0,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48006,Maxime Gorki - Paul Vaillant-Couturier,Villejuif,3,17,0,3,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48002,LCL Campus - Place Oscar Niemeyer,Villejuif,1,35,0,1,OUI,OUI,OUI
+2025-12-15T14:47:53.823283,48011,Epi d'Or - Chevilly,Villejuif,11,9,4,7,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48010,Karl Marx,Villejuif,7,9,3,4,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48004,Maxime Gorki - Louis Aragon,Villejuif,9,8,1,8,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48005,Eugène Varlin - Place de la Paix,Villejuif,3,20,1,2,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48008,Guy Môquet - Parvis Georges Marchais,Villejuif,3,26,0,3,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48003,Youri Gagarine - Karl Marx,Villejuif,5,17,4,1,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48009,République - Auguste Perret,Villejuif,10,18,3,7,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48012,Stalingrad - Henri Luisette,Villejuif,5,21,2,3,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48001,Chastenet de Géry - Marcel Paul,Villejuif,0,25,0,0,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48006,Maxime Gorki - Paul Vaillant-Couturier,Villejuif,3,17,0,3,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48002,LCL Campus - Place Oscar Niemeyer,Villejuif,1,35,0,1,OUI,OUI,OUI
+2025-12-15T14:47:55.577257,48011,Epi d'Or - Chevilly,Villejuif,11,9,4,7,OUI,OUI,OUI
