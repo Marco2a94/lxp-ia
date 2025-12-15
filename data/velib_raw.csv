@@ -54,3 +54,25 @@ timestamp,stationcode,name,nom_arrondissement_communes,numbikesavailable,numdock
 2025-12-15T14:55:19.756673,48006,Maxime Gorki - Paul Vaillant-Couturier,Villejuif,3,17,0,3,OUI,OUI,OUI
 2025-12-15T14:55:19.756673,48002,LCL Campus - Place Oscar Niemeyer,Villejuif,1,35,0,1,OUI,OUI,OUI
 2025-12-15T14:55:19.756673,48011,Epi d'Or - Chevilly,Villejuif,11,9,4,7,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48010,Karl Marx,Villejuif,7,9,3,4,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48004,Maxime Gorki - Louis Aragon,Villejuif,8,9,1,7,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48002,LCL Campus - Place Oscar Niemeyer,Villejuif,2,34,0,2,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48003,Youri Gagarine - Karl Marx,Villejuif,6,16,4,2,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48009,République - Auguste Perret,Villejuif,10,18,3,7,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48005,Eugène Varlin - Place de la Paix,Villejuif,2,21,1,1,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48008,Guy Môquet - Parvis Georges Marchais,Villejuif,2,27,0,2,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48012,Stalingrad - Henri Luisette,Villejuif,5,21,2,3,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48001,Chastenet de Géry - Marcel Paul,Villejuif,0,25,0,0,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48006,Maxime Gorki - Paul Vaillant-Couturier,Villejuif,3,17,0,3,OUI,OUI,OUI
+2025-12-15T15:00:20.272992,48011,Epi d'Or - Chevilly,Villejuif,11,9,4,7,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48010,Karl Marx,Villejuif,7,9,3,4,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48004,Maxime Gorki - Louis Aragon,Villejuif,8,9,1,7,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48005,Eugène Varlin - Place de la Paix,Villejuif,3,20,1,2,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48008,Guy Môquet - Parvis Georges Marchais,Villejuif,3,26,0,3,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48002,LCL Campus - Place Oscar Niemeyer,Villejuif,2,34,0,2,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48003,Youri Gagarine - Karl Marx,Villejuif,5,17,4,1,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48009,République - Auguste Perret,Villejuif,10,18,3,7,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48012,Stalingrad - Henri Luisette,Villejuif,5,21,2,3,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48001,Chastenet de Géry - Marcel Paul,Villejuif,0,25,0,0,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48006,Maxime Gorki - Paul Vaillant-Couturier,Villejuif,3,17,0,3,OUI,OUI,OUI
+2025-12-15T15:05:20.804863,48011,Epi d'Or - Chevilly,Villejuif,11,9,4,7,OUI,OUI,OUI
