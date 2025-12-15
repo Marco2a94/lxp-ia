@@ -1,7 +1,7 @@
-# src/collect.py
 import requests
 import csv
 import os
+import time
 from datetime import datetime
 
 URL = "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/velib-disponibilite-en-temps-reel/records"
@@ -26,8 +26,8 @@ FIELDS = [
     "is_returning",
 ]
 
-def main():
-    response = requests.get(URL, params=PARAMS)
+def collect_once():
+    response = requests.get(URL, params=PARAMS, timeout=10)
     response.raise_for_status()
     data = response.json()["results"]
 
@@ -42,7 +42,7 @@ def main():
         timestamp = datetime.utcnow().isoformat()
 
         for row in data:
-            record = {
+            writer.writerow({
                 "timestamp": timestamp,
                 "stationcode": row.get("stationcode"),
                 "name": row.get("name"),
@@ -54,8 +54,23 @@ def main():
                 "is_installed": row.get("is_installed"),
                 "is_renting": row.get("is_renting"),
                 "is_returning": row.get("is_returning"),
-            }
-            writer.writerow(record)
+            })
+
+    print(f"[{timestamp}] Collecte OK ({len(data)} stations)")
+
+def main(loop=False, interval_sec=300):
+    if not loop:
+        collect_once()
+    else:
+        print("Collecte Vélib automatique toutes les 5 minutes (Ctrl+C pour arrêter)")
+        try:
+            while True:
+                collect_once()
+                time.sleep(interval_sec)
+        except KeyboardInterrupt:
+            print("Arrêt de la collecte.")
 
 if __name__ == "__main__":
-    main()
+    # False = une seule exécution
+    # True  = automatisation toutes les 5 minutes
+    main(loop=True)
