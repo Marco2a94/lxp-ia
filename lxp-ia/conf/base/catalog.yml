@@ -1,5 +1,5 @@
 cleaned_data:
   type: lxp_ia.datasets.mongo_dataset.MongoDataset
-  uri: ${oc.env:MONGO_URI}
+  uri: "mongodb+srv://user:password@cluster/db"
   db: velib
   collection: cleaned
