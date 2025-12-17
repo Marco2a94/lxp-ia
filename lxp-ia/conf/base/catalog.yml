@@ -1,5 +1,5 @@
 cleaned_data:
   type: lxp_ia.datasets.mongo_dataset.MongoDataset
-  uri: "mongodb+srv://user:password@cluster/db"
-  db: velib
-  collection: cleaned
+  uri: "mongodb+srv://kedro_user:3X7az94mLzEQA5b7@lxp-ia-velib.db3lljh.mongodb.net/velib-lxp?appName=lxp-ia-velib"
+  db: velib-lxp
+  collection: cleaning
