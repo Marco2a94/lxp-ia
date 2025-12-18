@@ -1,45 +1,34 @@
 import pandas as pd
 
-def build_supervised_dataset(cleaned_data: pd.DataFrame, horizons: list[int]) -> pd.DataFrame:
-    df = cleaned_data.copy()
-
-    # Sécurité minimale
-    if "timestamp" not in df.columns:
-        raise ValueError("cleaned_data must contain a 'timestamp' column")
-
+def build_supervised_dataset(df, horizons):
     df["timestamp"] = pd.to_datetime(df["timestamp"])
+
+    # OBLIGATOIRE
     df = df.sort_values(["stationcode", "timestamp"])
 
-    supervised_rows = []
+    supervised = []
 
     for horizon in horizons:
         df_h = df.copy()
+        df_h["horizon"] = horizon
         df_h["target_timestamp"] = df_h["timestamp"] + pd.Timedelta(minutes=horizon)
 
-        # Auto-jointure temporelle par station
+        # OBLIGATOIRE
+        df_h = df_h.sort_values(["stationcode", "target_timestamp"])
+
         merged = pd.merge_asof(
             df_h,
             df[["stationcode", "timestamp", "numbikesavailable"]],
             left_on="target_timestamp",
             right_on="timestamp",
             by="stationcode",
-            direction="nearest",
-            tolerance=pd.Timedelta(minutes=5),
-            suffixes=("", "_future")
+            direction="nearest"
         )
 
-        merged = merged.dropna(subset=["numbikesavailable_future"])
-        merged["horizon_minutes"] = horizon
-        merged["target"] = merged["numbikesavailable_future"]
+        merged = merged.rename(columns={
+            "numbikesavailable_y": "target"
+        })
 
-        supervised_rows.append(merged)
+        supervised.append(merged)
 
-    supervised_df = pd.concat(supervised_rows, ignore_index=True)
-
-    # Nettoyage final
-    supervised_df = supervised_df.drop(columns=[
-        "target_timestamp",
-        "numbikesavailable_future"
-    ])
-
-    return supervised_df
+    return pd.concat(supervised, ignore_index=True)
