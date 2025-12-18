@@ -1,20 +1,66 @@
+import pandas as pd
 import mlflow
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+import mlflow.sklearn
 
-def train_model(cleaned_data, params):
-    X = cleaned_data.drop("target", axis=1)
-    y = cleaned_data["target"]
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import mean_absolute_error
+from sklearn.ensemble import RandomForestRegressor
 
-    model = LogisticRegression(**params)
+
+def train_regression_model(df):
+    df = df.copy()
+
+    # Features temporelles
+    df["hour"] = df["timestamp"].dt.hour
+    df["dayofweek"] = df["timestamp"].dt.dayofweek
+
+    features = [
+        "stationcode",
+        "hour",
+        "dayofweek",
+        "horizon",
+        "numbikesavailable"
+    ]
+
+    X = df[features]
+    y = df["target"]
+
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ("station", OneHotEncoder(handle_unknown="ignore"), ["stationcode"]),
+        ],
+        remainder="passthrough",
+    )
+
+    model = RandomForestRegressor(
+        n_estimators=100,
+        random_state=42,
+        n_jobs=-1
+    )
+
+    pipeline = Pipeline([
+        ("prep", preprocessor),
+        ("model", model)
+    ])
+
+    tscv = TimeSeriesSplit(n_splits=3)
+    maes = []
 
     with mlflow.start_run():
-        model.fit(X, y)
-        preds = model.predict(X)
+        for train_idx, test_idx in tscv.split(X):
+            X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
+            y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
 
-        acc = accuracy_score(y, preds)
-        mlflow.log_metric("accuracy", acc)
-        mlflow.log_params(params)
-        mlflow.sklearn.log_model(model, "model")
+            pipeline.fit(X_train, y_train)
+            preds = pipeline.predict(X_test)
 
-    return model
+            mae = mean_absolute_error(y_test, preds)
+            maes.append(mae)
+
+        mlflow.log_metric("mae_mean", sum(maes) / len(maes))
+        mlflow.sklearn.log_model(pipeline, "model")
+
+    return pipeline
