@@ -3,3 +3,7 @@ cleaned_data:
   uri: "mongodb+srv://kedro_user:3X7az94mLzEQA5b7@lxp-ia-velib.db3lljh.mongodb.net/velib-lxp?appName=lxp-ia-velib"
   db: velib-lxp
   collection: cleaning
+
+supervised_data:
+  type: pandas.CSVDataset
+  filepath: data/05_model_input/supervised_data.csv
