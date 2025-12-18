@@ -1,41 +1,87 @@
 import pandas as pd
+from typing import List
 
-def build_supervised_dataset(df, horizons):
+
+def build_supervised_dataset(
+    df: pd.DataFrame,
+    horizons: List[int],
+) -> pd.DataFrame:
+    """
+    Build a supervised dataset for multi-horizon forecasting.
+
+    Output columns:
+    - stationcode
+    - timestamp        (current time)
+    - horizon
+    - current_bikes
+    - target           (future bikes)
+    """
+
     df = df.copy()
+
+    required_cols = {"stationcode", "timestamp", "numbikesavailable"}
+    missing = required_cols - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing required columns: {missing}")
+
     df["timestamp"] = pd.to_datetime(df["timestamp"])
 
-    # TRI ABSOLU REQUIS POUR merge_asof
-    df = df.sort_values(["stationcode", "timestamp"]).reset_index(drop=True)
+    supervised_parts = []
 
-    supervised = []
+    for station, df_station in df.groupby("stationcode"):
+        df_station = df_station.sort_values("timestamp").reset_index(drop=True)
 
-    for horizon in horizons:
-        df_h = df.copy()
+        for horizon in horizons:
+            left = df_station.copy()
+            left["horizon"] = horizon
+            left["target_timestamp"] = (
+                left["timestamp"] + pd.Timedelta(minutes=horizon)
+            )
 
-        df_h["horizon"] = horizon
-        df_h["target_timestamp"] = df_h["timestamp"] + pd.Timedelta(minutes=horizon)
+            left = left.sort_values("target_timestamp").reset_index(drop=True)
 
-        # TRI ABSOLU REQUIS POUR merge_asof
-        df_h = df_h.sort_values(
-            ["stationcode", "target_timestamp"]
-        ).reset_index(drop=True)
+            right = (
+                df_station[["timestamp", "numbikesavailable"]]
+                .sort_values("timestamp")
+                .reset_index(drop=True)
+            )
 
-        merged = pd.merge_asof(
-            df_h,
-            df[["stationcode", "timestamp", "numbikesavailable"]],
-            left_on="target_timestamp",
-            right_on="timestamp",
-            by="stationcode",
-            direction="nearest"
-        )
+            merged = pd.merge_asof(
+                left,
+                right,
+                left_on="target_timestamp",
+                right_on="timestamp",
+                direction="nearest",
+                tolerance=pd.Timedelta(minutes=5),
+            )
 
-        merged = merged.rename(columns={
-            "timestamp_x": "timestamp",
-            "numbikesavailable": "target"
-        })
+            # 🔧 RENOMMAGES EXPLICITES (LA CLÉ DU BUG)
+            merged = merged.rename(
+                columns={
+                    "timestamp_x": "timestamp",
+                    "numbikesavailable_x": "current_bikes",
+                    "numbikesavailable_y": "target",
+                }
+            )
 
-        merged = merged.drop(columns=["timestamp_y", "target_timestamp"])
+            merged["stationcode"] = station
 
-        supervised.append(merged)
+            supervised_parts.append(
+                merged[
+                    [
+                        "stationcode",
+                        "timestamp",
+                        "horizon",
+                        "current_bikes",
+                        "target",
+                    ]
+                ]
+            )
 
-    return pd.concat(supervised, ignore_index=True)
+    supervised_df = (
+        pd.concat(supervised_parts, ignore_index=True)
+        .dropna()
+        .reset_index(drop=True)
+    )
+
+    return supervised_df
