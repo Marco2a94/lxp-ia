@@ -135,7 +135,7 @@ def evaluate_regression_model(
     for i, target in enumerate(TARGET_COLS):
         diff = np.abs(y_pred[:, i] - y_true[target].values)
 
-        y_true_bin = np.ones_like(diff)        # toujours 1 (vérité)
+        y_true_bin = np.ones_like(diff)
         y_pred_bin = (diff <= tolerance).astype(int)
 
         precision = precision_score(y_true_bin, y_pred_bin)
@@ -148,10 +148,31 @@ def evaluate_regression_model(
         metrics[f"recall_{target}_pm1"] = recall
         metrics[f"f1_{target}_pm1"] = f1
 
-        # Log MLflow
         mlflow.log_metric(f"accuracy_{target}_pm1", accuracy)
         mlflow.log_metric(f"precision_{target}_pm1", precision)
         mlflow.log_metric(f"recall_{target}_pm1", recall)
         mlflow.log_metric(f"f1_{target}_pm1", f1)
+
+    # -----------------------------
+    # 4. Score global métier
+    # -----------------------------
+    f1_scores = [
+        metrics["f1_target_h1_pm1"],
+        metrics["f1_target_h3_pm1"],
+        metrics["f1_target_h6_pm1"],
+    ]
+
+    f1_global_pm1 = float(np.mean(f1_scores))
+    metrics["f1_global_pm1"] = f1_global_pm1
+    mlflow.log_metric("f1_global_pm1", f1_global_pm1)
+
+    # -----------------------------
+    # 5. Validation automatique
+    # -----------------------------
+    VALIDATION_THRESHOLD = 0.97
+    is_model_valid = f1_global_pm1 >= VALIDATION_THRESHOLD
+
+    metrics["model_valid"] = int(is_model_valid)
+    mlflow.log_metric("model_valid", int(is_model_valid))
 
     return metrics
