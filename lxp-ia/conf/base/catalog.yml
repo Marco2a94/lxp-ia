@@ -5,5 +5,7 @@ cleaned_data:
   collection: cleaning
 
 supervised_data:
-  type: pandas.CSVDataset
+  type: kedro_datasets.pandas.CSVDataset
   filepath: data/05_model_input/supervised_data.csv
+  save_args:
+    index: false
