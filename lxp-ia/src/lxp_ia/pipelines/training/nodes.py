@@ -218,24 +218,4 @@ def evaluate_regression_model(
 
     mlflow.log_param("model_promoted_to", metrics["model_promoted_to"])
 
-
-    # ------------------------------------------------------------------
-    # 6. Promotion automatique dans le Model Registry
-    # ------------------------------------------------------------------
-    if is_model_valid:
-        client = mlflow.tracking.MlflowClient()
-        model_name = "bike_forecast_multi_horizon"
-
-        latest_versions = client.get_latest_versions(
-            model_name, stages=["None"]
-        )
-
-        for version in latest_versions:
-            client.transition_model_version_stage(
-                name=model_name,
-                version=version.version,
-                stage="ProductionCandidate",
-                archive_existing_versions=True,
-            )
-
     return metrics
