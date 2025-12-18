@@ -11,7 +11,10 @@ def create_pipeline(**kwargs):
                     "cleaned_data": "cleaned_data",
                     "horizons": "params:horizons",
                 },
-                outputs="supervised_data",
+                outputs={
+                    "model": "regression_model",
+                    "metrics": "training_metrics",
+                },
                 name="build_supervised_dataset",
             )
         ]
