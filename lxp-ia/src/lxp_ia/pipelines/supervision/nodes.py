@@ -1,87 +1,46 @@
 import pandas as pd
-from typing import List
 
 
 def build_supervised_dataset(
-    df: pd.DataFrame,
-    horizons: List[int],
+    cleaned_data: pd.DataFrame,
+    horizons: list[int],
 ) -> pd.DataFrame:
     """
-    Build a supervised dataset for multi-horizon forecasting.
-
-    Output columns:
-    - stationcode
-    - timestamp        (current time)
-    - horizon
-    - current_bikes
-    - target           (future bikes)
+    Build a multi-output supervised dataset:
+    one row per (station, timestamp),
+    one target column per horizon.
     """
 
-    df = df.copy()
+    df = cleaned_data.copy()
 
-    required_cols = {"stationcode", "timestamp", "numbikesavailable"}
-    missing = required_cols - set(df.columns)
-    if missing:
-        raise ValueError(f"Missing required columns: {missing}")
-
+    # Sécurité types
     df["timestamp"] = pd.to_datetime(df["timestamp"])
+
+    # On garde uniquement ce qu'il faut
+    df = df[
+        ["stationcode", "timestamp", "numbikesavailable"]
+    ].rename(
+        columns={"numbikesavailable": "current_bikes"}
+    )
 
     supervised_parts = []
 
-    for station, df_station in df.groupby("stationcode"):
-        df_station = df_station.sort_values("timestamp").reset_index(drop=True)
+    for station, g in df.groupby("stationcode"):
+        g = g.sort_values("timestamp").reset_index(drop=True)
 
-        for horizon in horizons:
-            left = df_station.copy()
-            left["horizon"] = horizon
-            left["target_timestamp"] = (
-                left["timestamp"] + pd.Timedelta(minutes=horizon)
-            )
+        base = g[["timestamp", "current_bikes"]].copy()
 
-            left = left.sort_values("target_timestamp").reset_index(drop=True)
+        for h in horizons:
+            base[f"target_h{h}"] = g["current_bikes"].shift(-h)
 
-            right = (
-                df_station[["timestamp", "numbikesavailable"]]
-                .sort_values("timestamp")
-                .reset_index(drop=True)
-            )
+        base["stationcode"] = station
 
-            merged = pd.merge_asof(
-                left,
-                right,
-                left_on="target_timestamp",
-                right_on="timestamp",
-                direction="nearest",
-                tolerance=pd.Timedelta(minutes=5),
-            )
+        supervised_parts.append(base)
 
-            # 🔧 RENOMMAGES EXPLICITES (LA CLÉ DU BUG)
-            merged = merged.rename(
-                columns={
-                    "timestamp_x": "timestamp",
-                    "numbikesavailable_x": "current_bikes",
-                    "numbikesavailable_y": "target",
-                }
-            )
+    supervised = pd.concat(supervised_parts, ignore_index=True)
 
-            merged["stationcode"] = station
+    # Nettoyage : on enlève les lignes sans toutes les targets
+    target_cols = [f"target_h{h}" for h in horizons]
+    supervised = supervised.dropna(subset=target_cols)
 
-            supervised_parts.append(
-                merged[
-                    [
-                        "stationcode",
-                        "timestamp",
-                        "horizon",
-                        "current_bikes",
-                        "target",
-                    ]
-                ]
-            )
-
-    supervised_df = (
-        pd.concat(supervised_parts, ignore_index=True)
-        .dropna()
-        .reset_index(drop=True)
-    )
-
-    return supervised_df
+    return supervised

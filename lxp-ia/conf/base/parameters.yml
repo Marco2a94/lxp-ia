@@ -1,4 +1,7 @@
 model:
   max_iter: 200
   
-horizons: [15, 30]
+horizons:
+  - 1
+  - 3
+  - 6
