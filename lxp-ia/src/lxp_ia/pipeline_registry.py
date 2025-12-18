@@ -1,6 +1,5 @@
-from lxp_ia.pipelines.training.pipeline import create_pipeline
+from kedro.framework.project import find_pipelines
 
 def register_pipelines():
-    return {
-        "__default__": create_pipeline()
-    }
+    pipelines = find_pipelines()
+    return pipelines
