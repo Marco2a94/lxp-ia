@@ -103,10 +103,24 @@ def evaluate_regression_model(
     # -----------------------------
     # 1. Séparation features / targets
     # -----------------------------
+    df = supervised_data.copy()
+
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df["hour"] = df["timestamp"].dt.hour
+    df["dayofweek"] = df["timestamp"].dt.dayofweek
+
+    FEATURES = [
+        "current_bikes",
+        "stationcode",
+        "hour",
+        "dayofweek",
+    ]
+
     TARGET_COLS = ["target_h1", "target_h3", "target_h6"]
 
-    X = supervised_data[["current_bikes"]]
-    y_true = supervised_data[TARGET_COLS]
+    X = df[FEATURES]
+    y_true = df[TARGET_COLS]
+
 
     # -----------------------------
     # 2. Prédictions
