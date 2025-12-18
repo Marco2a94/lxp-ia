@@ -6,12 +6,13 @@ def create_pipeline(**kwargs):
         [
             node(
                 func=build_supervised_dataset,
-                inputs=dict(
-                    cleaned_data="cleaned_data",
-                    horizons="params:horizons"
-                ),
+                inputs={
+                    "df": "cleaned_data",
+                    "horizons": "params:horizons",
+                },
                 outputs="supervised_data",
                 name="build_supervised_dataset",
             )
+
         ]
     )
