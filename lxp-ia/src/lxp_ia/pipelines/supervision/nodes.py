@@ -1,37 +1,35 @@
 import pandas as pd
 
-
-def build_supervised_dataset(df: pd.DataFrame, horizons: list[int]) -> pd.DataFrame:
+def build_supervised_dataset(df, horizons):
     df = df.copy()
     df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df = df.sort_values(["stationcode", "timestamp"])
 
-    supervised_parts = []
+    supervised = []
 
-    for station, df_station in df.groupby("stationcode"):
-        df_station = df_station.sort_values("timestamp")
+    for horizon in horizons:
+        df_h = df.copy()
+        df_h["horizon"] = horizon
+        df_h["target_timestamp"] = df_h["timestamp"] + pd.Timedelta(minutes=horizon)
+        df_h = df_h.sort_values(["stationcode", "target_timestamp"])
 
-        for horizon in horizons:
-            df_h = df_station.copy()
-            df_h["horizon"] = horizon
-            df_h["target_timestamp"] = df_h["timestamp"] + pd.Timedelta(minutes=horizon)
+        merged = pd.merge_asof(
+            df_h,
+            df[["stationcode", "timestamp", "numbikesavailable"]],
+            left_on="target_timestamp",
+            right_on="timestamp",
+            by="stationcode",
+            direction="nearest"
+        )
 
-            df_h = df_h.sort_values("target_timestamp")
+        merged = merged.rename(columns={
+            "numbikesavailable": "target",
+            "timestamp_x": "timestamp"
+        })
 
-            merged = pd.merge_asof(
-                df_h,
-                df_station[["timestamp", "numbikesavailable"]],
-                left_on="target_timestamp",
-                right_on="timestamp",
-                direction="nearest",
-                allow_exact_matches=True,
-            )
+        # On ne garde PAS le timestamp futur
+        merged = merged.drop(columns=["timestamp_y", "target_timestamp"])
 
-            merged = merged.rename(
-                columns={"numbikesavailable": "target"}
-            )
+        supervised.append(merged)
 
-            merged["stationcode"] = station
-            supervised_parts.append(merged)
-
-    supervised = pd.concat(supervised_parts, ignore_index=True)
-    return supervised
+    return pd.concat(supervised, ignore_index=True)
