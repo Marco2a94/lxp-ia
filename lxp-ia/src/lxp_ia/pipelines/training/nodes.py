@@ -20,6 +20,13 @@ from sklearn.metrics import (
 # TRAIN
 # ============================================================
 def train_regression_model(df: pd.DataFrame):
+    """
+    Entraîne un modèle RandomForest multi-horizon pour la prédiction
+    du nombre de vélos disponibles à H+1 / H+3 / H+6.
+
+    Le modèle est loggé dans MLflow et enregistré sous un nom unique.
+    """
+
     # ------------------------------------------------------------------
     # 1. Feature engineering
     # ------------------------------------------------------------------
@@ -56,57 +63,50 @@ def train_regression_model(df: pd.DataFrame):
     )
 
     # ------------------------------------------------------------------
-    # 3. Modèle multi-output
+    # 3. Modèle
     # ------------------------------------------------------------------
-    base_model = RandomForestRegressor(
-        n_estimators=200,
-        max_depth=15,
-        random_state=42,
-        n_jobs=-1,
+    model = MultiOutputRegressor(
+        RandomForestRegressor(
+            n_estimators=200,
+            max_depth=15,
+            random_state=42,
+            n_jobs=-1,
+        )
     )
-
-    model = MultiOutputRegressor(base_model)
 
     # ------------------------------------------------------------------
     # 4. Entraînement + MLflow
     # ------------------------------------------------------------------
-    with mlflow.start_run(run_name="rf_multi_horizon_v1"):
-        model.fit(X_train, y_train)
+    with mlflow.start_run(run_name="rf_multi_horizon"):
 
+        model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        # ---- métriques régression classiques
+        # ---- métriques régression
         metrics = {}
         for i, horizon in enumerate(TARGETS):
-            mae = mean_absolute_error(y_test.iloc[:, i], y_pred[:, i])
-            rmse = np.sqrt(mean_squared_error(y_test.iloc[:, i], y_pred[:, i]))
-
-            metrics[f"MAE_{horizon}"] = mae
-            metrics[f"RMSE_{horizon}"] = rmse
-
-        mlflow.log_params(
-            {
-                "model_type": "RandomForest",
-                "n_estimators": 200,
-                "max_depth": 15,
-                "features": FEATURES,
-                "targets": TARGETS,
-            }
-        )
+            metrics[f"mae_{horizon}"] = mean_absolute_error(
+                y_test.iloc[:, i], y_pred[:, i]
+            )
+            metrics[f"rmse_{horizon}"] = np.sqrt(
+                mean_squared_error(y_test.iloc[:, i], y_pred[:, i])
+            )
 
         mlflow.log_metrics(metrics)
 
-        # ---- log modèle
-        mlflow.sklearn.log_model(model, artifact_path="model")
+        mlflow.log_params({
+            "model_type": "RandomForest",
+            "n_estimators": 200,
+            "max_depth": 15,
+            "features": FEATURES,
+            "targets": TARGETS,
+        })
 
-        # ---- enregistrement dans le Model Registry
-        model_name = "bike_forecast_multi_horizon"
-        mlflow.register_model(
-            model_uri=f"runs:/{mlflow.active_run().info.run_id}/model",
-            name=model_name,
+        # ---- log + enregistrement du modèle
+        mlflow.sklearn.log_model(
+            sk_model=model,
+            name="bike_forecast_model"
         )
-
-        mlflow.set_tag("model_name", model_name)
 
     return model
 
