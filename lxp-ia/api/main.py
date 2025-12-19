@@ -3,13 +3,14 @@ from pydantic import BaseModel
 import pandas as pd
 
 from api.model import load_model
+from api.agent import ask_agent
 
 app = FastAPI(title="Bike Forecast API")
 
 model = load_model()
 
 # -------------------------
-# Schéma d'entrée
+# Schémas
 # -------------------------
 class PredictionRequest(BaseModel):
     current_bikes: int
@@ -18,8 +19,16 @@ class PredictionRequest(BaseModel):
     dayofweek: int
 
 
+class AskRequest(BaseModel):
+    question: str
+    current_bikes: int
+    stationcode: int
+    hour: int
+    dayofweek: int
+
+
 # -------------------------
-# Endpoint test
+# Healthcheck
 # -------------------------
 @app.get("/")
 def healthcheck():
@@ -27,12 +36,11 @@ def healthcheck():
 
 
 # -------------------------
-# Endpoint prédiction
+# Prédiction brute ML
 # -------------------------
 @app.post("/predict")
 def predict(req: PredictionRequest):
     X = pd.DataFrame([req.dict()])
-
     preds = model.predict(X)[0]
 
     return {
@@ -40,3 +48,19 @@ def predict(req: PredictionRequest):
         "horizon_3h": round(preds[1], 2),
         "horizon_6h": round(preds[2], 2),
     }
+
+
+# -------------------------
+# Agent IA (langage naturel)
+# -------------------------
+@app.post("/ask")
+def ask(req: AskRequest):
+    answer = ask_agent(
+        question=req.question,
+        current_bikes=req.current_bikes,
+        stationcode=req.stationcode,
+        hour=req.hour,
+        dayofweek=req.dayofweek,
+    )
+
+    return {"answer": answer}
