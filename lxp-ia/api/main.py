@@ -21,6 +21,11 @@ class PredictionRequest(BaseModel):
 
 class AskRequest(BaseModel):
     question: str
+    current_bikes: int
+    stationcode: int
+    hour: int
+    dayofweek: int
+
 
 # -------------------------
 # Healthcheck
@@ -50,8 +55,13 @@ def predict(req: PredictionRequest):
 # -------------------------
 @app.post("/ask")
 def ask(req: AskRequest):
-    answer = ask_agent(req.question)
-    return {
-        "answer": answer
-    }
+    answer = ask_agent(
+        question=req.question,
+        current_bikes=req.current_bikes,
+        stationcode=req.stationcode,
+        hour=req.hour,
+        dayofweek=req.dayofweek,
+    )
+    return {"answer": answer}
+
 
