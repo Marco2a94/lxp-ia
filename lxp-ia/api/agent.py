@@ -13,7 +13,7 @@ def ask_agent(
     hour: int,
     dayofweek: int,
 ):
-    # 1. Appel à ton modèle ML
+    # 1. Appel au modèle ML
     payload = {
         "current_bikes": current_bikes,
         "stationcode": stationcode,
@@ -22,6 +22,7 @@ def ask_agent(
     }
 
     response = requests.post(PREDICT_API_URL, json=payload)
+    response.raise_for_status()  # 👈 important
     preds = response.json()
 
     # 2. Prompt LLM
@@ -44,3 +45,4 @@ Explique la situation simplement, en français, sans jargon technique.
     )
 
     return completion.choices[0].message.content
+
