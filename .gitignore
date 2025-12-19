@@ -1,3 +1,7 @@
 lxp-venv
 data/
 
+.env
+node_modules/
+dist/
+
